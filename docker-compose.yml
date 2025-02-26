@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  BancoPrueba:
+    image: bancoPrueba_backend
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+     - 8080:8080
+    restart: always
+    networks:
+      net: 

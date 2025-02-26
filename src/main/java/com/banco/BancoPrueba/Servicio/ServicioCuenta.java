@@ -1,0 +1,95 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/Service.java to edit this template
+ */
+package com.banco.BancoPrueba.Servicio;
+
+import com.banco.BancoPrueba.Dto.DtoEstadoCuenta;
+import com.banco.BancoPrueba.Entidades.Cuenta;
+import com.banco.BancoPrueba.Entidades.Movimientos;
+import com.banco.BancoPrueba.Exception.ErrorGrabacionException;
+import com.banco.BancoPrueba.Repository.CuentaRepository;
+import com.banco.BancoPrueba.Repository.MovimientosRepository;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class ServicioCuenta {
+
+    @Autowired
+    private CuentaRepository cuentaRepository;
+    @Autowired
+    private MovimientosRepository movimientosRepository;
+
+    @Transactional
+    public Cuenta guardarCuentaCliente(Cuenta cuenta) {
+        boolean respuesta = false;
+        Movimientos movimientos = new Movimientos();
+        Date fechaMovimiento = new Date();
+
+        try {
+
+            var cuentaCreada = cuentaRepository.save(cuenta);
+            if (cuentaCreada != null) {
+                movimientos.setFechaMovimiento(fechaMovimiento);
+                movimientos.setCuentaId(cuentaCreada);
+                movimientos.setSaldo(cuenta.getSaldoInicial());
+                movimientos.setTipoMovimiento("Deposito");
+                movimientos.setValor(cuenta.getSaldoInicial());
+
+                movimientosRepository.save(movimientos);
+            }
+            return cuentaCreada;
+        } catch (Exception e) {
+            throw new ErrorGrabacionException("Error al grabar datos de la cuenta");
+        }
+    }
+
+    public List<DtoEstadoCuenta> reporte(String fechaInicio, String fechaFin, Long clienteId) {
+
+        List<DtoEstadoCuenta> dtoEstadoCuentas = new ArrayList<>();
+        try {
+
+            String inicio = fechaInicio;
+            String fin = fechaFin;
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateInicio = formatter1.parse(inicio);
+            Date dateFin = formatter1.parse(fin);
+            var data = "";
+            List<String> datos = cuentaRepository.obtenerEstadoCuenta(clienteId, inicio, fin);
+
+            for (int x = 0; x < datos.size(); x++) {
+                data = datos.get(x);
+                String[] split = data.split(",");
+                List<String> listaDatos = new ArrayList<>();
+
+                for (int j = 0; j < split.length; j++) {
+
+                    listaDatos.add(split[j]);
+                }
+                DtoEstadoCuenta dtoEstadoCuenta = new DtoEstadoCuenta();
+                dtoEstadoCuenta.setFecha(listaDatos.get(0).toString());
+                dtoEstadoCuenta.setNombre(listaDatos.get(1).toString());
+                dtoEstadoCuenta.setNumeroCuenta(listaDatos.get(2).toString());
+                dtoEstadoCuenta.setTipoCuenta(listaDatos.get(3).toString());
+                dtoEstadoCuenta.setSaldo(new BigDecimal(listaDatos.get(4).toString()));
+                dtoEstadoCuenta.setEstado(listaDatos.get(5).toString());
+                dtoEstadoCuenta.setTipoMovimiento(listaDatos.get(6).toString());
+                dtoEstadoCuenta.setValor(new BigDecimal(listaDatos.get(7).toString()));
+                dtoEstadoCuentas.add(dtoEstadoCuenta);
+            }
+
+            return dtoEstadoCuentas;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+}

@@ -1,0 +1,66 @@
+{
+  "clave": "1234",
+  "direccion": "Otavalo sn y principal",
+  "edad": 39,
+  "estado": "ACT",
+  "genero": "H",
+  "identificacion": "1802672277",
+  "nombre": "Jose Lema",
+  "telefono": "098254785"
+}
+
+{
+  "clave": "5678",
+  "direccion": "Amazonas y NNUU",
+  "edad": 40,
+  "estado": "ACT",
+  "genero": "H",
+  "identificacion": "1103810725",
+  "nombre": "Marianela Montalvo",
+  "telefono": "097548965"
+}
+
+{
+  "clave": "1234",
+  "direccion": "13 junio y Equinoccial",
+  "edad": 41,
+  "estado": "ACT",1245
+  "genero": "H",
+  "identificacion": "1801948959",
+  "nombre": "Juan Osorio",
+  "telefono": "098874587"
+}
+
+
+
+----- Json para crear cuenta y asignada a un cliente
+{
+  "estado": "True",
+  "clienteId": {
+    "personaId": 1
+      },
+ "numeroCuenta": "478758",
+  "saldoInicial": 2000,
+  "tipoCuenta": "Ahorros"
+}
+
+{
+  "estado": "True",
+  "clienteId": {
+    "personaId": 3
+      },
+ "numeroCuenta": "225487",
+  "saldoInicial": 100,
+  "tipoCuenta": "Corriente"
+}
+
+{
+  "estado": "True",
+  "clienteId": {
+    "personaId": 3
+      },
+ "numeroCuenta": "496825",
+  "saldoInicial": 540,
+  "tipoCuenta": "Ahorros"
+}
+
